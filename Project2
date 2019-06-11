@@ -1,0 +1,36 @@
+import javax.swing.JOptionPane;
+// Used for GUI Package (dialog box) input/output
+import java.util.Scanner;
+// Used for Console Package input/output
+
+public class Project2 {
+
+	public static void main(String[] args) {
+		// GUI Input (dialog box)
+		String numa = JOptionPane.showInputDialog("Enter an integer");
+		int x = Integer.parseInt(numa);
+		String numb = JOptionPane.showInputDialog("Enter another integer");
+		int y = Integer.parseInt(numb);
+		
+		// GUI Output (dialog box)
+		JOptionPane.showMessageDialog(null, "The sum of the integers is: " + (x+y));
+		JOptionPane.showMessageDialog(null, "\nThe difference of the integers is: " + (x-y));
+		JOptionPane.showMessageDialog(null, "\nThe product of the integers is: " + (x*y));
+		JOptionPane.showMessageDialog(null, "\nThe quotient of the integers is: " + (x/y));
+		JOptionPane.showMessageDialog(null, "\nThe modulus of the integers is: " + (x%y));
+		
+		// Console Input
+		Scanner input  = new Scanner(System.in);
+		System.out.print("Enter 2 real numbers: ");
+		
+		int num1 = input.nextInt();
+		int num2 = input.nextInt();
+		
+		//Console output
+		System.out.printf("The sum of the integers is: %4d", num1 + num2);
+		System.out.printf("\nThe difference of the integers is: %4d", num1 - num2);
+		System.out.printf("\nThe product of the integers is: %4d", num1 * num2);
+		System.out.printf("\nThe quotient of the integers is: %4d", num1 / num2);
+	}
+
+}
