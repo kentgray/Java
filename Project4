@@ -1,0 +1,40 @@
+//Project4.java File
+import javax.swing.*;
+import java.util.Scanner;
+import java.awt.Font;
+import util.IO;
+
+public class Project4{
+
+public static void main(String[] args){
+  Scanner scan = IO.getInput("Enter 2 real numbers");
+  float x = scan.nextFloat();
+  float y = scan.nextFloat();
+  IO.showMessage(String.format("Sum:%7.2f", x+y));
+  }
+  
+}
+
+
+// IO.java File
+package util;
+
+import java.awt.Font;
+import java.util.Scanner;
+import javax.swing.JOptionPane;
+import javax.swing.JTextarea;
+
+public class IO{
+  public static void showMessage(String s){
+    System.out.println(s);
+    JTextArea jta = new JTextArea(s);
+    
+    jta.setFont(new Font("MonoType Corsiva", Font.ITALIC,72));
+    JOptionPane.showMessageDialog(null, jta);
+    }
+    
+    public static Scanner getInput(String prompt){
+      return new Scanner(JOptionPane.showInputDialog(prompt));
+    }
+
+}
