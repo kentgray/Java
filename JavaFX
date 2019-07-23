@@ -13,7 +13,9 @@ import javafx.geometry.*;
 import javafx.scene.web.*;
 
 public class MultiMedia extends Application {
-
+    
+    LinkList list = new LinkList();
+    
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
@@ -40,10 +42,7 @@ public class MultiMedia extends Application {
         imageView.setImage(new Image(new java.io.File("T:\\Java\\KGray\\NetBeans\\MultiMedia\\smile2.jpg").toURI().toString()));
         
         tab = new Tab("Images", imageView);
-        tabPane.getTabs().add(tab);
-        
-        
-        
+        tabPane.getTabs().add(tab);        
         
         MenuBar mb = new MenuBar();
         Menu menu = new Menu("File");        
@@ -53,8 +52,9 @@ public class MultiMedia extends Application {
         FileChooser fc = new FileChooser();
         mi.setOnAction(e->{
            java.io.File f = fc.showOpenDialog(primaryStage); 
-           if(f!=null){
-               
+           
+           if(f!=null){    
+               list.insert(f);
                // brings Image Tab to the front 0-based
                 // 0 is browser 1 is video 2 is Image Tab
                if(f.getName().endsWith(".jpg") ||f.getName().endsWith(".png")){                     
@@ -67,6 +67,15 @@ public class MultiMedia extends Application {
                    tabPane.getSelectionModel().select(1);
                }
            }
+        });
+        
+        mi = new MenuItem("List");
+        menu.getItems().add(mi);
+        mi.setOnAction(e->{
+            Alert alert = new Alert(Alert.AlertType.NONE,list.toString(),ButtonType.OK);
+            alert.initOwner(primaryStage);
+            alert.setTitle("File List");
+            alert.showAndWait();
         });
         
         
