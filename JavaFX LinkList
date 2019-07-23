@@ -1,0 +1,62 @@
+//file->new file->Java/class -> Link List
+
+import java.io.*;
+
+public class LinkList {
+    private class Node{
+        File f;
+        Node next;  // this is a reference to the next element
+                    // int the list
+        Node(File f){
+            this.f = f;
+            next = null;
+        }
+        int compareTo(Node n){
+            return this.f.getName().compareTo(n.f.getName());
+        }
+        
+        public String toString(){
+            return f.getAbsolutePath();
+        }
+    }
+
+Node top = null;
+
+// 2 inserts because Node is private - no one outside of class can use this
+// define functions in terms of how their using the data
+public void insert(File f){
+    insert(new Node(f));
+}
+
+// there are 4 cases
+private void insert(Node n){
+    if (top==null) top=n;  //top == null means there's nothing in there
+    else if (n.compareTo(top)<0){  //compareTo if its negative, then something comes before
+        n.next = top;
+        top=n;
+    }
+    else{
+        // this loop walks the list
+        // previous is current
+        //current is current next
+        Node curr = top, prev = null;
+        while(curr !=null && curr.compareTo(n)<0){
+            prev = curr;
+            curr = curr.next;
+        }
+        prev.next = n;
+        n.next = curr;
+        
+    }
+}
+
+public String toString(){
+   String result = "";
+   for (Node curr = top; curr!=null; curr=curr.next)
+       result += curr +"\n";
+   return result;
+}
+    
+}
+
+
