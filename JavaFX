@@ -1,0 +1,120 @@
+import javafx.scene.image.*;
+import javafx.scene.media.*;
+import javafx.application.*;
+import static javafx.application.Application.*;
+import javafx.event.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.effect.*;
+import javafx.scene.layout.*;
+import javafx.stage.*;
+import javafx.scene.text.*;
+import javafx.geometry.*;
+import javafx.scene.web.*;
+
+public class MultiMedia extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        Button btn = new Button();
+        btn.setText("Say 'Hello World'");
+        BorderPane root = new BorderPane();
+        
+        TabPane tabPane = new TabPane();
+        WebView webView = new WebView();
+        webView.getEngine().load("http://www.yahoo.com");
+        Tab tab = new Tab("Browser", webView);
+        tabPane.getTabs().add(tab);
+        root.setCenter(tabPane);  
+        
+        //  MediaView MediaPlayer Media        
+        MediaView mv = new MediaView();
+        Media media = new Media(new java.io.File("T:\\Java\\KGray\\NetBeans\\MultiMedia\\RM.mp4").toURI().toString());
+        MediaPlayer mp = new MediaPlayer(media);
+        mv.setMediaPlayer(mp);
+        tab = new Tab("Media", mv);
+        tabPane.getTabs().add(tab);
+        mp.play();
+        
+        ImageView imageView = new ImageView();
+        imageView.setImage(new Image(new java.io.File("T:\\Java\\KGray\\NetBeans\\MultiMedia\\smile2.jpg").toURI().toString()));
+        
+        tab = new Tab("Images", imageView);
+        tabPane.getTabs().add(tab);
+        
+        
+        
+        
+        MenuBar mb = new MenuBar();
+        Menu menu = new Menu("File");        
+        mb.getMenus().add(menu);
+        MenuItem mi = new MenuItem("Open...");
+        menu.getItems().add(mi);
+        FileChooser fc = new FileChooser();
+        mi.setOnAction(e->{
+           java.io.File f = fc.showOpenDialog(primaryStage); 
+           if(f!=null){
+               
+               // brings Image Tab to the front 0-based
+                // 0 is browser 1 is video 2 is Image Tab
+               if(f.getName().endsWith(".jpg") ||f.getName().endsWith(".png")){                     
+                    tabPane.getSelectionModel().select(2);
+                    imageView.setImage(new Image(f.toURI().toString()));
+               }
+               else if (f.getName().endsWith(".mp4")){
+                   MediaPlayer xmp = new MediaPlayer(new Media(f.toURI().toString()));
+                   mv.setMediaPlayer(xmp);
+                   tabPane.getSelectionModel().select(1);
+               }
+           }
+        });
+        
+        
+        mi = new MenuItem("Exit");
+        mi.setOnAction(e-> System.exit(0));
+        menu = new Menu("Help");
+        mb.getMenus().add(menu);
+        mi = new MenuItem("About");
+        menu.getItems().add(mi);
+        mi.setOnAction(e->{
+
+                Alert alert = new Alert(Alert.AlertType.NONE);
+                alert.getButtonTypes().add(ButtonType.OK);
+                alert.setTitle("About");
+                alert.initOwner(primaryStage);
+                
+                VBox vb = new VBox(); //vertical box
+                vb.setAlignment(Pos.CENTER);
+                Effect effect = new DropShadow();
+                Font fnt = new Font("MonoType Corsiva", 60);
+                java.util.function.Function<String,Text> f = (s)->{
+                    Text text = new Text();
+                    text.setEffect(effect);
+                    text.setFont(fnt);
+                    text.setText(s);
+                    return text;
+                };
+                vb.getChildren().add(f.apply("Super Duper MultiMedia App vO.1"));
+                vb.getChildren().add(f.apply("Copyright \u00a9 2019 Kent Gray"));
+                vb.getChildren().add(f.apply("All rights reserved."));
+                alert.getDialogPane().setContent(vb);
+                alert.showAndWait();
+            
+        });
+        
+        root.setTop(mb);    
+                
+        
+        root.getChildren().add(btn);
+        Scene scene = new Scene(root, 300, 250);
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+   
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+}
