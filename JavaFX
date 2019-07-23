@@ -57,7 +57,7 @@ public class MultiMedia extends Application {
                list.insert(f);
                // brings Image Tab to the front 0-based
                 // 0 is browser 1 is video 2 is Image Tab
-               if(f.getName().endsWith(".jpg") ||f.getName().endsWith(".png")){                     
+               if(f.getName().endsWith(".jpg") || f.getName().endsWith(".png")){                     
                     tabPane.getSelectionModel().select(2);
                     imageView.setImage(new Image(f.toURI().toString()));
                }
@@ -65,6 +65,7 @@ public class MultiMedia extends Application {
                    MediaPlayer xmp = new MediaPlayer(new Media(f.toURI().toString()));
                    mv.setMediaPlayer(xmp);
                    tabPane.getSelectionModel().select(1);
+                   xmp.play();
                }
            }
         });
@@ -112,8 +113,7 @@ public class MultiMedia extends Application {
         });
         
         root.setTop(mb);    
-                
-        
+                     
         root.getChildren().add(btn);
         Scene scene = new Scene(root, 300, 250);
         primaryStage.setTitle("Hello World!");
