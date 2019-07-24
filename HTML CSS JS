@@ -1,0 +1,52 @@
+
+<html>
+    <head>
+        <title>A web page by KG</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            
+            body{
+                background-color:red;
+                color:white;
+            }
+            div{
+                background-color:blue;
+                color: yellow;
+                border: black solid 4px;
+                padding: 10px 20px 30px 40px;
+                margin: 10px 20px 30px 40px;
+                font: normal 40px "MonoType Corsiva";
+            }            
+        </style>   
+        <script>
+            function test(){
+                var el = document.getElementById("text1");
+                var t = document.getElementById("textarea");
+                var s = "this is from the textbox\n" +
+                    el.value;
+                t.innerHTML = s;
+                
+                <!--This will return the element textbox as an object-->
+                <!--alert("this is a fun test!!");-->
+            }
+            
+            
+        </script>
+    </head>
+    <body>
+        
+        <!-- Block element always takes the full width
+            inline means they take up only as much room as needed-->
+        <h1>This is the head</h1>
+        <b>I'm so Bold!</b>
+        <i>I'm Italian</i>
+        
+        <div>My fabulous body</div>
+        <input type="button" value ="test" onclick="test()"/>
+        <input type="text" id="text1" />
+        <input type ="checkBox">Donut</input>
+        <textarea id="textarea" rows="40" cols="40"> this is the text area</textarea>
+        
+    </body>
+</html>
