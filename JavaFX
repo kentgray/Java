@@ -7,7 +7,201 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.effect.*;
 import javafx.scene.layout.*;
+import javafx.stage.*;import javafx.scene.image.*;
+import javafx.scene.media.*;
+import javafx.application.*;
+import static javafx.application.Application.*;
+import javafx.event.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.effect.*;
+import javafx.scene.layout.*;
 import javafx.stage.*;
+import javafx.scene.text.*;
+import javafx.geometry.*;
+import javafx.scene.web.*;
+
+public class MultiMedia extends Application {
+    
+    LinkList list = new LinkList();
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Button btn = new Button();
+        BorderPane root = new BorderPane();
+        
+        // TabPane is component that can have multiple views with their own tabs
+        TabPane tabPane = new TabPane();
+        WebView webView = new WebView();
+        
+        //webEngine is the one that actually does the web pages
+        webView.getEngine().load("http://www.google.com");
+        Tab tab = new Tab("Browser", webView);
+        tabPane.getTabs().add(tab);
+        root.setCenter(tabPane);  
+        
+        //  Need 3 things: MediaView MediaPlayer Media        
+        MediaView mv = new MediaView();
+        /**
+        Media media = new Media(new java.io.File("T:\\Java\\KGray\\NetBeans\\MultiMedia\\RM.mp4").toURI().toString());
+        **/
+        Pane pane = new Pane(mv);
+        tab = new Tab("Media", pane);
+        pane.layoutBoundsProperty().addListener((a1,a2,a3)->{
+            mv.setFitHeight(a3.getHeight());
+            mv.setFitWidth(a3.getWidth());
+        });
+        ContextMenu ctxMenu = new ContextMenu();
+        MenuItem mi = new MenuItem("Play");
+        ctxMenu.getItems().add(mi);
+        mi.setOnAction(e->{
+            MediaPlayer mp = mv.getMediaPlayer();
+            if(mp!=null){
+                if(mp.getStatus()==MediaPlayer.Status.PLAYING){
+                    mp.pause();
+                    return;
+                }
+            }
+            mp.play();
+        });
+        pane.setOnContextMenuRequested(e->{
+                ctxMenu.show(pane,e.getScreenX(),e.getScreenY());
+        });
+        tab = new Tab("Media", pane);
+        tabPane.getTabs().add(tab);
+        
+        // for images, we need an ImageView
+        ImageView imageView = new ImageView();
+        
+        // create ScrollPane and add to tab
+        ScrollPane sp = new ScrollPane(imageView);
+        tab = new Tab("Images",sp);        
+        sp.layoutBoundsProperty().addListener((a1,a2,a3)->{
+            mv.setFitHeight(a3.getHeight());
+            mv.setFitWidth(a3.getWidth());
+        });
+        ContextMenu ctxMenu2 = new ContextMenu();
+        mi = new MenuItem("Fit to Window");
+        ctxMenu2.getItems().add(mi);
+        mi.setOnAction(e->{
+            Image image = imageView.getImage();
+            if(image!=null){
+                imageView.setFitWidth(image.getWidth());
+                imageView.setFitHeight(image.getHeight());
+            }
+        });
+        mi = new MenuItem("100%");
+        ctxMenu2.getItems().add(mi);
+        mi.setOnAction(e->{
+            Image image = imageView.getImage();
+            if(image!=null){
+                imageView.setFitWidth(image.getWidth());
+                imageView.setFitHeight(image.getHeight());
+            }
+        });        
+        mi = new MenuItem("200%");  
+        ctxMenu2.getItems().add(mi);
+        mi.setOnAction(e->{
+            Image image = imageView.getImage();
+            if(image!=null){
+                imageView.setFitWidth(image.getWidth());
+                imageView.setFitHeight(image.getHeight());
+            }
+        });        
+        sp.setContextMenu(ctxMenu);
+        
+        
+        imageView.setImage(new Image(new java.io.File("T:\\Java\\KGray\\NetBeans\\MultiMedia\\smile2.jpg").toURI().toString()));
+        tabPane.getTabs().add(tab);
+        
+        MenuBar mb = new MenuBar();
+        Menu menu = new Menu("File");        
+    //    mb.getMenus().add(menu);
+        mi = new MenuItem("Open...");
+        menu.getItems().add(mi);
+        FileChooser fc = new FileChooser();
+        mi.setOnAction(e->{
+           java.io.File f = fc.showOpenDialog(primaryStage); 
+           
+           if(f!=null){    
+               list.insert(f);
+               // brings Image Tab to the front 0-based
+                // 0 is browser 1 is video 2 is Image Tab
+               if(f.getName().endsWith(".jpg") || f.getName().endsWith(".png")){                     
+                    tabPane.getSelectionModel().select(2);
+                    imageView.setImage(new Image(f.toURI().toString()));
+               }
+               else if (f.getName().endsWith(".mp4")){
+                   tabPane.getSelectionModel().select(1);
+                   MediaPlayer xmp = new MediaPlayer(new Media(f.toURI().toString()));
+                   mv.setMediaPlayer(xmp);
+                   xmp.setAutoPlay(true);
+               }
+           }
+        });
+        
+        mi = new MenuItem("List");
+        menu.getItems().add(mi);
+        mi.setOnAction(e->{
+            Alert alert = new Alert(Alert.AlertType.NONE,list.toString(),ButtonType.OK);
+            alert.initOwner(primaryStage);
+            alert.setTitle("File List");
+            alert.showAndWait();
+        });
+        
+        
+        mi = new MenuItem("Exit");
+        // in swing, setOnAction() is the event handler
+        mi.setOnAction(e-> System.exit(0));
+        menu.getItems().add(mi);
+        mb.getMenus().add(menu);
+        menu = new Menu("Help");
+        mb.getMenus().add(menu);        
+        mi = new MenuItem("About");
+        menu.getItems().add(mi);
+        
+        mi.setOnAction(e->{
+                Alert alert = new Alert(Alert.AlertType.NONE);
+                alert.getButtonTypes().add(ButtonType.OK);
+                alert.setTitle("About");
+//                alert.initOwner(primaryStage);
+                
+                VBox vb = new VBox(); //vertical box
+                vb.setAlignment(Pos.CENTER);
+                Effect effect = new DropShadow();
+                Font fnt = new Font("MonoType Corsiva", 60);
+                java.util.function.Function<String,Text> f = (s)->{
+                    Text text = new Text();
+                    text.setEffect(effect);
+                    text.setFont(fnt);
+                    text.setText(s);
+                    return text;
+                };
+                vb.getChildren().add(f.apply("Super Duper MultiMedia App vO.1"));
+                vb.getChildren().add(f.apply("Copyright \u00a9 2019 Kent Gray"));
+                vb.getChildren().add(f.apply("All rights reserved."));
+                alert.getDialogPane().setContent(vb);
+                alert.showAndWait();
+            
+        });
+        
+        root.setTop(mb);    
+                
+        
+//        root.getChildren().add(btn);
+        Scene scene = new Scene(root, 1300, 750);
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+   
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+}
+
 import javafx.scene.text.*;
 import javafx.geometry.*;
 import javafx.scene.web.*;
