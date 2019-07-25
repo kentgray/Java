@@ -22,8 +22,8 @@
         <script>
             function test(){
                 var el = document.getElementById("text1");
-                var t = document.getElementById("textarea");
-                var s = "this is from the textbox\n" +
+                var t = document.getElementById("body");
+                var s = "this is from KG textbox\n" +
                     el.value;
                 t.innerHTML = s;
                 
@@ -42,7 +42,7 @@
         <b>I'm so Bold!</b>
         <i>I'm Italian</i>
         
-        <div>My fabulous body</div>
+        <div id = "body">My fabulous body</div>
         <input type="button" value ="test" onclick="test()"/>
         <input type="text" id="text1" />
         <input type ="checkBox">Donut</input>
