@@ -77,6 +77,12 @@ public class Tree {
 				double calc() { return z;}};
 			return tmp;
 		}
+                if(ch=='('){
+                    getChar();
+                    BNode tmp = findExpr();
+                    getChar();
+                    return tmp;
+                }
 		return null;
-		}}
-
+		}
+}
