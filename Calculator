@@ -5,7 +5,6 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
-import sun.reflect.generics.tree.Tree;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
@@ -26,6 +25,9 @@ abstract class CanvasPane extends Pane{
 		this.getChildren().add(gp);
 		tf = new TextField();
 		tf.setPrefWidth(240);
+                Font fnt = new Font("Segoe UI", 24);
+                tf.setFont(fnt);
+                tf.setPrefWidth(240);
 		this.getChildren().add(tf);
 		
 		Platform.runLater(()->tf.requestFocus());  //runlater tells it to run this after everything else has been run
@@ -53,14 +55,14 @@ abstract class CanvasPane extends Pane{
 // JavaFX has a skinnable (GUI) architecture == which can be changed with CSS
 
  
-public class HelloWorld extends Application {
-//    Tree tree = new Tree();
-//    public double f(double x) {
-//    	return tree.calc(x);
-//    }
+public class Calculator extends Application {
+    Tree tree = new Tree();
+    public double f(double x) {
+    	return tree.calc(x);
+    }
     @Override
     public void start(Stage primaryStage) {
-//    	tree.setEqn("x");
+    	tree.setEqn("x");
           CanvasPane root = new CanvasPane() {
         	public void paint() {
         		GraphicsContext ctx = canvas.getGraphicsContext2D();  //use it to draw
