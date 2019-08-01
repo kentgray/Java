@@ -1,0 +1,82 @@
+
+
+public class Tree {
+	private abstract class BNode{
+		abstract double calc();
+		BNode left, right;		
+	}
+	BNode root;  // BNode == Binary Node
+	char ch; 
+	int pos;
+	String eqn;
+	double x;
+	
+	public void setEqn(String eqn) {
+		pos = 0;
+		this.eqn = eqn;
+		getChar();
+		root = findExpr();
+	}
+	
+	private char getChar() {
+		if (pos<eqn.length()) return ch = eqn.charAt(pos++);
+		return ch = '\0';
+	}
+	
+	void parse(String eqn) {
+		this.eqn = eqn;
+		pos = 0;
+		getChar();
+		root = findExpr();
+	}
+	
+	double calc(double x) {
+		this.x = x;
+		return root.calc();		
+	}
+	
+	BNode findExpr() {
+		BNode tmp = findProd();
+		while (ch == '+') {
+			BNode tmproot = new BNode() {double calc() { return left.calc() + right.calc(); }};
+			getChar();
+			tmproot.left = tmp;
+			tmproot.right = findProd();
+			tmp = tmproot;
+		}
+		return tmp;
+	}
+	
+	BNode findProd() {
+		BNode tmproot = findTerm();
+		while (ch == '*') {
+			BNode tmp = new BNode() {double calc() { return left.calc() * right.calc(); }};
+			getChar();
+			tmp.left = tmproot;
+			tmp.right = findTerm();
+			tmproot = tmp;
+		}
+		return tmproot;
+	}
+	
+	BNode findTerm() {
+		if (ch == 'x') {
+			BNode tmp = new BNode() {double calc() { return x; }};
+			getChar();
+			return tmp;
+		}
+		if (ch >= '0' && ch <='9') {
+			StringBuilder sb = new StringBuilder();
+			do {sb.append(ch);
+			} while (getChar() >= '0' && ch <= '9');
+			if (ch == '.')
+				do {sb.append(ch);
+				} while (getChar() >= '0' && ch <= '9');
+			double z = Double.parseDouble(sb.toString());
+			BNode tmp = new BNode() {
+				double calc() { return z;}};
+			return tmp;
+		}
+		return null;
+		}}
+
