@@ -1,0 +1,143 @@
+
+import javafx.application.*;
+import javafx.event.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.*;
+import sun.reflect.generics.tree.Tree;
+import javafx.scene.canvas.*;
+import javafx.scene.paint.*;
+import javafx.scene.text.*;
+
+abstract class CanvasPane extends Pane{
+	public double f(double x) {
+		return (double)Math.sin(x);  // we need scale to display the sin curve zoomed in
+									// (1/40.0f) = 1 pixel
+	}
+	Canvas canvas;
+	GridPane gp;
+	TextField tf;
+	public CanvasPane() {
+		canvas = new Canvas(400,400);
+		this.getChildren().add(canvas);	
+		// grid pane is a layout that will put components in grids
+		gp = new GridPane();
+		this.getChildren().add(gp);
+		tf = new TextField();
+		tf.setPrefWidth(240);
+		this.getChildren().add(tf);
+		
+		Platform.runLater(()->tf.requestFocus());  //runlater tells it to run this after everything else has been run
+		
+		this.layoutBoundsProperty().addListener((a1,a2,a3)->{
+			// put grid pane inside canvas pane; every time it resizes it will repaint
+			canvas.setWidth(a3.getWidth()-250);
+			canvas.setHeight(a3.getHeight());
+			repaint();
+			tf.relocate(a3.getWidth()-245, 30);
+			gp.relocate(a3.getWidth()-250, 70);
+			
+		});
+	}
+	
+	abstract void paint();
+	
+	public void repaint() {
+		Platform.runLater( ()->paint() );  //lambda expression w/out parameters - use empty parenthesis
+											//runlater means pick the best time to run this method
+	}
+}
+
+// Swing has a plug-in architecture
+// JavaFX has a skinnable (GUI) architecture == which can be changed with CSS
+
+ 
+public class HelloWorld extends Application {
+//    Tree tree = new Tree();
+//    public double f(double x) {
+//    	return tree.calc(x);
+//    }
+    @Override
+    public void start(Stage primaryStage) {
+//    	tree.setEqn("x");
+          CanvasPane root = new CanvasPane() {
+        	public void paint() {
+        		GraphicsContext ctx = canvas.getGraphicsContext2D();  //use it to draw
+        		ctx.setStroke(new Color(0,0.5,0.5,1.0));
+        		// stroke == draw line (outside)
+        		// fill == paint inside the area
+        		//drawing on the canvas is persistence which means it draws on itself
+        		double w = canvas.getWidth();
+        		double h = canvas.getHeight();
+        		ctx.clearRect(0,0,w,h);
+        		ctx.strokeLine(10, h/2, w-10, h/2);
+        		ctx.strokeLine(w/2, 10, w/2, h-10);
+        		float scale = 40.0f;
+        		double bounds = w/scale/2.0f;
+        		double x = -bounds;
+        		double dx = 1/4.0;  //dx = differential
+        		ctx.beginPath();  // beginPath = tell it to draw stuff, then you draw it
+        		
+        		double y = f( x);
+        		ctx.moveTo(w/2+scale*x,  h/2-scale*y);
+        		while (x<bounds){
+        			x+=dx;
+        			y=f(x);
+        			ctx.lineTo(w/2+scale*x,  h/2-scale*y);        			
+        		}
+        		ctx.stroke();
+        		
+//        		ctx.strokeLine(0, 0, w, h-20);
+//        		ctx.strokeLine(x1, y1, x2, y2);
+        		
+        	}
+        };
+        
+        GridPane gp = root.gp;
+        gp.setVgap(8);
+        gp.setHgap(3);
+        String ops = "789+456-123*\u00b10./";
+        Font fnt = new Font("Segoe UI", 22);
+        for (int i=0; i<ops.length(); i++) {
+        	Button btn = new Button(ops.charAt(i) + "");
+        	btn.setFont(fnt);
+        	btn.setPrefWidth(60);
+        	btn.setStyle(""+
+        			"    -fx-padding: 8 15 15 15;\r\n" + 
+//        			"    -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;\r\n" + 
+        			"    -fx-background-radius: 8;\r\n" + 
+        			"    -fx-background-color: \r\n" + 
+        			"        linear-gradient(from 0% 93% to 0% 100%, #a34313 0%, #903b12 100%),\r\n" + 
+        			"        #9d4024,\r\n" + 
+        			"        #d86e3a,\r\n" + 
+        			"        radial-gradient(center 50% 50%, radius 100%, #d86e3a, #c54e2c);\r\n" + 
+        			"    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );\r\n" + 
+        			"    -fx-font-weight: bold;\r\n" + 
+        			"    -fx-font-size: 1.2em" +
+//        			" 	 -fx-padding: 10 15 13 15;\r\n" + 
+//        			"    -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0" +
+//        			"    -fx-fill: white;\r\n" + 
+        			"    -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );");
+        	gp.add(btn, i%4,i/4);
+        }
+        root.tf.setOnAction(e->{
+        	tree.setEqn(root.tf.getText().trim());
+        	root.repaint();
+ 
+        });
+//        Button btn = new Button("Test");
+//        gp.add(btn, 1, 1);
+//        //  root.getChildren().add(btn);
+//        root.repaint();
+        
+        Scene scene = new Scene(root, 600, 500);
+
+        primaryStage.setTitle("Graphing Calculator");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+ public static void main(String[] args) {
+        launch(args);
+    }
+}
